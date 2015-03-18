@@ -9,7 +9,8 @@ goog.require('ol.layer.Layer');
  */
 ol.layer.TileProperty = {
   PRELOAD: 'preload',
-  USE_INTERIM_TILES_ON_ERROR: 'useInterimTilesOnError'
+  USE_INTERIM_TILES_ON_ERROR: 'useInterimTilesOnError',
+  USE_OLD_AS_INTERIM_TILES: 'useOldAsInterimTiles'
 };
 
 
@@ -35,11 +36,14 @@ ol.layer.Tile = function(opt_options) {
 
   delete baseOptions.preload;
   delete baseOptions.useInterimTilesOnError;
+  delete baseOptions.useOldAsInterimTiles;
   goog.base(this,  /** @type {olx.layer.LayerOptions} */ (baseOptions));
 
   this.setPreload(goog.isDef(options.preload) ? options.preload : 0);
   this.setUseInterimTilesOnError(goog.isDef(options.useInterimTilesOnError) ?
       options.useInterimTilesOnError : true);
+  this.setUseOldAsInterimTiles(goog.isDef(options.useOldAsInterimTiles) ?
+      options.useOldAsInterimTiles : false);
 };
 goog.inherits(ol.layer.Tile, ol.layer.Layer);
 
@@ -109,3 +113,34 @@ goog.exportProperty(
     ol.layer.Tile.prototype,
     'setUseInterimTilesOnError',
     ol.layer.Tile.prototype.setUseInterimTilesOnError);
+
+
+/**
+ * @return {boolean} Use old tiles as interim tiles.
+ * @observable
+ * @api
+ */
+ol.layer.Tile.prototype.getUseOldAsInterimTiles = function() {
+  return /** @type {boolean} */ (
+      this.get(ol.layer.TileProperty.USE_OLD_AS_INTERIM_TILES));
+};
+goog.exportProperty(
+    ol.layer.Tile.prototype,
+    'getUseOldAsInterimTiles',
+    ol.layer.Tile.prototype.getUseOldAsInterimTiles);
+
+
+/**
+ * @param {boolean} useOldAsInterimTiles Use old tiles as interim tiles.
+ * @observable
+ * @api
+ */
+ol.layer.Tile.prototype.setUseOldAsInterimTiles =
+    function(useOldAsInterimTiles) {
+  this.set(
+      ol.layer.TileProperty.USE_OLD_AS_INTERIM_TILES, useOldAsInterimTiles);
+};
+goog.exportProperty(
+    ol.layer.Tile.prototype,
+    'setUseOldAsInterimTiles',
+    ol.layer.Tile.prototype.setUseOldAsInterimTiles);

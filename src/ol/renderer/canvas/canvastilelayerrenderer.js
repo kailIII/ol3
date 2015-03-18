@@ -217,7 +217,6 @@ ol.renderer.canvas.TileLayer.prototype.prepareFrame =
   var canvasHeight = tilePixelSize * tileRange.getHeight();
 
   var canvas, context;
-  var zoomLevelChange = false;
   if (goog.isNull(this.canvas_)) {
     goog.asserts.assert(goog.isNull(this.canvasSize_));
     goog.asserts.assert(goog.isNull(this.context_));
@@ -250,9 +249,6 @@ ol.renderer.canvas.TileLayer.prototype.prepareFrame =
     } else {
       canvasWidth = this.canvasSize_[0];
       canvasHeight = this.canvasSize_[1];
-      if (z != this.renderedCanvasZ_) {
-        zoomLevelChange = true;
-      }
       if (z != this.renderedCanvasZ_ ||
           !this.renderedCanvasTileRange_.containsTileRange(tileRange)) {
         this.renderedCanvasTileRange_ = null;
@@ -294,6 +290,7 @@ ol.renderer.canvas.TileLayer.prototype.prepareFrame =
   var findLoadedTiles = this.createLoadedTileFinder(tileSource, tilesToDrawByZ);
 
   var useInterimTilesOnError = tileLayer.getUseInterimTilesOnError();
+  var useOldAsInterimTiles = tileLayer.getUseOldAsInterimTiles();
 
   var tmpExtent = ol.extent.createEmpty();
   var tmpTileRange = new ol.TileRange(0, 0, 0, 0);
@@ -327,7 +324,7 @@ ol.renderer.canvas.TileLayer.prototype.prepareFrame =
   }
 
   var i, ii;
-  if (zoomLevelChange) {
+  if (!useOldAsInterimTiles) {
     for (i = 0, ii = tilesToClear.length; i < ii; ++i) {
       tile = tilesToClear[i];
       x = tilePixelSize * (tile.tileCoord[1] - canvasTileRange.minX);
